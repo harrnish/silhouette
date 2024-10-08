@@ -7,43 +7,24 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 1em;
+  row-gap: 4em;
   padding: 1em;
+  margin-top: 20em;
 }
 
 .index .grid-item {
   background-color: #bbb;
-  height: 140px;
-}
-
-.index .grid-item.logo {
-  background-color: transparent;
-  grid-column: span 2;
+  height: 100px;
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .index .grid-container {
     grid-template-columns: repeat(5, 1fr);
   }
-
-  .index .grid-item.logo {
-    grid-column: span 2;
-  }
-
-  .index .grid-item {
-    height: 200px;
-  }
 }
 
 @media (min-width: 1024px) {
   .index .grid-container {
-    grid-template-columns: repeat(8, 1fr);
-  }
-
-  .index .grid-item.logo {
-    grid-column: span 2;
-  }
-
-  .index .grid-item {
-    height: 240px;
+    grid-template-columns: repeat(12, 1fr);
   }
 }
