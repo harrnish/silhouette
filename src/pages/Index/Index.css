@@ -23,6 +23,20 @@
   font-size: 10px;
 }
 
+.index .grid-item {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+
+.index .grid-item img {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+  /* filter: saturate(0.5); */
+}
+
 .index .whitespace {
   width: 100%;
   height: 300px;
