@@ -7,7 +7,7 @@ const Nav = () => {
     <div className="nav">
       <div className="nav-item" id="logo">
         <Link className="nav-link" to="/">
-          Codegrid
+          Silhouette <sup>&copy;</sup>
         </Link>
       </div>
       <div className="nav-item">

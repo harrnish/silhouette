@@ -26,11 +26,19 @@ const Index = () => {
           Object.values(imageContext).map((importImage) => importImage())
         );
         const imageUrls = loadedImages.map((module) => module.default);
-        setImages(imageUrls);
+
+        // Sort images based on their file names
+        const sortedImages = imageUrls.sort((a, b) => {
+          const aNum = parseInt(a.match(/(\d+)\.[^.]+$/)[1]);
+          const bNum = parseInt(b.match(/(\d+)\.[^.]+$/)[1]);
+          return aNum - bNum;
+        });
+
+        setImages(sortedImages);
         setDebug((prev) => ({
           ...prev,
           loading: false,
-          imageCount: imageUrls.length,
+          imageCount: sortedImages.length,
         }));
       } catch (error) {
         console.error("Error loading images:", error);

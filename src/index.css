@@ -40,6 +40,13 @@
   src: url(./assets/fonts/PPNeueMontreal-Bold.otf) format("opentype");
 }
 
+@font-face {
+  font-family: "Akkurat Mono";
+  font-style: normal;
+  font-weight: 500;
+  src: url(./assets/fonts/AkkuratMono.ttf) format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -63,7 +70,8 @@ img {
 a,
 p {
   text-decoration: none;
+  text-transform: uppercase;
   color: #000;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
 }
