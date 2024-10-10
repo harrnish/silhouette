@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Index.css";
 import Transition from "../../components/Transition/Transition";
-
 import { ReactLenis } from "@studio-freight/react-lenis";
 
 const Index = () => {
-  const [images, setImages] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [preview, setPreview] = useState({
+    visible: false,
+    image: "",
+    name: "",
+  });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadImages = async () => {
       try {
         const imageContext = import.meta.glob(
@@ -35,6 +39,18 @@ const Index = () => {
     };
     loadImages();
   }, []);
+
+  useEffect(() => {
+    if (preview.visible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [preview.visible]);
 
   const heights = [80, 90, 100, 110, 120, 130];
   const colors = [
@@ -75,6 +91,14 @@ const Index = () => {
     return `UNKNOWN_${index + 1}.jpg`;
   };
 
+  const handleItemClick = (image, name) => {
+    setPreview({ visible: true, image, name });
+  };
+
+  const handlePreviewClick = () => {
+    setPreview({ visible: false, image: "", name: "" });
+  };
+
   if (loading) {
     return (
       <div className="loading-msg">
@@ -85,7 +109,10 @@ const Index = () => {
 
   return (
     <ReactLenis root>
-      <div className="index">
+      <div
+        className="index"
+        style={{ pointerEvents: preview.visible ? "none" : "auto" }}
+      >
         <div className="grid-container">
           {images.length === 0 ? (
             <div>
@@ -93,7 +120,11 @@ const Index = () => {
             </div>
           ) : (
             images.map((image, index) => (
-              <div className="grid-item-wrapper" key={index}>
+              <div
+                className="grid-item-wrapper"
+                key={index}
+                onClick={() => handleItemClick(image, getItemName(index))}
+              >
                 <div className="grid-item-name">
                   <p>{getItemName(index)}</p>
                 </div>
@@ -119,6 +150,27 @@ const Index = () => {
         </div>
         <div className="whitespace"></div>
       </div>
+
+      {preview.visible && (
+        <div
+          className="preview"
+          onClick={handlePreviewClick}
+          style={{ pointerEvents: "auto" }}
+        >
+          <div
+            className="preview-img"
+            style={{
+              backgroundImage: `url(${preview.image})`,
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          ></div>
+          <div className="preview-name">
+            <p>{preview.name}</p>
+          </div>
+        </div>
+      )}
     </ReactLenis>
   );
 };
