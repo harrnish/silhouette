@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Index.css";
 import Transition from "../../components/Transition/Transition";
-import { ReactLenis } from "@studio-freight/react-lenis";
+import { ReactLenis, useLenis } from "@studio-freight/react-lenis";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -17,6 +17,8 @@ const Index = () => {
   });
 
   const gridRef = useRef(null);
+
+  const lenis = useLenis(({ scroll }) => {});
 
   useEffect(() => {
     const loadImages = async () => {
