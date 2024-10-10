@@ -20,24 +20,6 @@ const Index = () => {
   const gridRef = useRef(null);
 
   useEffect(() => {
-    // Initialize Lenis
-    const lenis = new Lenis();
-
-    // Listen for the scroll event and log the event data
-    lenis.on("scroll", (e) => {
-      console.log(e);
-    });
-
-    // Use requestAnimationFrame to continuously update the scroll
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-  });
-
-  useEffect(() => {
     const loadImages = async () => {
       try {
         const imageContext = import.meta.glob(
@@ -156,69 +138,67 @@ const Index = () => {
   };
 
   return (
-    <ReactLenis root>
-      <div
-        ref={container}
-        className="index"
-        style={{ pointerEvents: preview.visible ? "none" : "auto" }}
-      >
-        <div className="grid-container" ref={gridRef}>
-          {images.length === 0 ? (
-            <div>No images found. Check your image directory.</div>
-          ) : (
-            images.map((image, index) => (
-              <div
-                className="grid-item-wrapper"
-                key={index}
-                onClick={() => handleItemClick(image.url, getItemName(index))}
-              >
-                <div className="grid-item-name">
-                  <p>{getItemName(index)}</p>
-                </div>
-                <div
-                  className="grid-item"
-                  style={{
-                    height: `${getRandomHeight()}px`,
-                    backgroundColor: getRandomColor(),
-                  }}
-                >
-                  <img
-                    src={image.url}
-                    alt={`Image ${index + 1}`}
-                    onError={(e) => {
-                      console.error(`Error loading image ${index}:`, e);
-                      e.target.src = "path/to/fallback/image.jpg";
-                    }}
-                  />
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-        <div className="whitespace"></div>
-
-        {preview.visible && (
-          <div
-            className="preview"
-            onClick={handlePreviewClick}
-            style={{ pointerEvents: "auto" }}
-          >
+    <div
+      ref={container}
+      className="index"
+      style={{ pointerEvents: preview.visible ? "none" : "auto" }}
+    >
+      <div className="grid-container" ref={gridRef}>
+        {images.length === 0 ? (
+          <div>No images found. Check your image directory.</div>
+        ) : (
+          images.map((image, index) => (
             <div
-              className="preview-img"
-              style={{
-                backgroundImage: `url(${preview.image})`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            ></div>
-            <div className="preview-name">
-              <p>{preview.name}</p>
+              className="grid-item-wrapper"
+              key={index}
+              onClick={() => handleItemClick(image.url, getItemName(index))}
+            >
+              <div className="grid-item-name">
+                <p>{getItemName(index)}</p>
+              </div>
+              <div
+                className="grid-item"
+                style={{
+                  height: `${getRandomHeight()}px`,
+                  backgroundColor: getRandomColor(),
+                }}
+              >
+                <img
+                  src={image.url}
+                  alt={`Image ${index + 1}`}
+                  onError={(e) => {
+                    console.error(`Error loading image ${index}:`, e);
+                    e.target.src = "path/to/fallback/image.jpg";
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          ))
         )}
       </div>
-    </ReactLenis>
+      <div className="whitespace"></div>
+
+      {preview.visible && (
+        <div
+          className="preview"
+          onClick={handlePreviewClick}
+          style={{ pointerEvents: "auto" }}
+        >
+          <div
+            className="preview-img"
+            style={{
+              backgroundImage: `url(${preview.image})`,
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          ></div>
+          <div className="preview-name">
+            <p>{preview.name}</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
