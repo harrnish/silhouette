@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Index.css";
 import Transition from "../../components/Transition/Transition";
 import { ReactLenis } from "@studio-freight/react-lenis";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const Index = () => {
+  const container = useRef();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState({
@@ -11,6 +14,8 @@ const Index = () => {
     image: "",
     name: "",
   });
+
+  const gridRef = useRef(null);
 
   useEffect(() => {
     const loadImages = async () => {
@@ -39,6 +44,28 @@ const Index = () => {
     };
     loadImages();
   }, []);
+
+  useGSAP(
+    () => {
+      if (!loading && gridRef.current) {
+        const items = gsap.utils.toArray(".grid-item-wrapper");
+
+        gsap.fromTo(
+          items,
+          { opacity: 0, y: 100 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.5,
+            ease: "power4.out",
+            stagger: 0.01,
+            delay: 0.75,
+          }
+        );
+      }
+    },
+    { scope: container, dependencies: [loading] }
+  );
 
   useEffect(() => {
     if (preview.visible) {
@@ -99,25 +126,16 @@ const Index = () => {
     setPreview({ visible: false, image: "", name: "" });
   };
 
-  if (loading) {
-    return (
-      <div className="loading-msg">
-        <p>Loading images...</p>
-      </div>
-    );
-  }
-
   return (
     <ReactLenis root>
       <div
+        ref={container}
         className="index"
         style={{ pointerEvents: preview.visible ? "none" : "auto" }}
       >
-        <div className="grid-container">
+        <div className="grid-container" ref={gridRef}>
           {images.length === 0 ? (
-            <div>
-              <p>No images found. Check your image directory.</p>
-            </div>
+            <></>
           ) : (
             images.map((image, index) => (
               <div

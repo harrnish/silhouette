@@ -19,6 +19,7 @@
   padding: 1em;
   margin-top: 20em;
   z-index: 0;
+  will-change: transform;
 }
 
 .index .grid-item-name {
