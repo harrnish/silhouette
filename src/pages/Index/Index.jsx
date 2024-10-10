@@ -1,15 +1,12 @@
 import React from "react";
 import "./Index.css";
-import { ReactLenis } from "@studio-freight/react-lenis";
 import Transition from "../../components/Transition/Transition";
+
+import { ReactLenis } from "@studio-freight/react-lenis";
 
 const Index = () => {
   const [images, setImages] = React.useState([]);
-  const [debug, setDebug] = React.useState({
-    loading: true,
-    error: null,
-    imageCount: 0,
-  });
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const loadImages = async () => {
@@ -17,17 +14,12 @@ const Index = () => {
         const imageContext = import.meta.glob(
           "../../assets/images/index/*.(png|jpg|svg)"
         );
-        setDebug((prev) => ({
-          ...prev,
-          imageCount: Object.keys(imageContext).length,
-        }));
 
         const loadedImages = await Promise.all(
           Object.values(imageContext).map((importImage) => importImage())
         );
         const imageUrls = loadedImages.map((module) => module.default);
 
-        // Sort images based on their file names
         const sortedImages = imageUrls.sort((a, b) => {
           const aNum = parseInt(a.match(/(\d+)\.[^.]+$/)[1]);
           const bNum = parseInt(b.match(/(\d+)\.[^.]+$/)[1]);
@@ -35,14 +27,10 @@ const Index = () => {
         });
 
         setImages(sortedImages);
-        setDebug((prev) => ({
-          ...prev,
-          loading: false,
-          imageCount: sortedImages.length,
-        }));
+        setLoading(false);
       } catch (error) {
         console.error("Error loading images:", error);
-        setDebug((prev) => ({ ...prev, loading: false, error: error.message }));
+        setLoading(false);
       }
     };
     loadImages();
@@ -87,12 +75,12 @@ const Index = () => {
     return `UNKNOWN_${index + 1}.jpg`;
   };
 
-  if (debug.loading) {
-    return <div>Loading images...</div>;
-  }
-
-  if (debug.error) {
-    return <div>Error loading images: {debug.error}</div>;
+  if (loading) {
+    return (
+      <div className="loading-msg">
+        <p>Loading images...</p>
+      </div>
+    );
   }
 
   return (

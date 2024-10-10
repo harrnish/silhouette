@@ -4,8 +4,32 @@
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   padding: 1em;
   z-index: 1;
+}
+
+.nav .nav-items:nth-child(1) {
+  flex: 3;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.nav .nav-items:nth-child(2) {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav > .nav-items:nth-child(1) .nav-item {
+  flex: 1;
+}
+
+.nav .nav-item#site-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav .nav-item {
+  display: flex;
 }

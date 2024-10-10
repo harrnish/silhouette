@@ -3,6 +3,13 @@
   height: 100%;
 }
 
+.loading-msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .index .grid-container {
   position: relative;
   display: grid;
@@ -29,12 +36,6 @@
   justify-content: center;
   align-items: flex-start;
 }
-
-/* .index .grid-item img {
-  width: 50%;
-  height: 50%;
-  object-fit: cover;
-} */
 
 .index .whitespace {
   width: 100%;
