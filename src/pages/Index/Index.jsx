@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Index.css";
 import Transition from "../../components/Transition/Transition";
-import { ReactLenis } from "@studio-freight/react-lenis";
+import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -16,6 +16,32 @@ const Index = () => {
   });
 
   const gridRef = useRef(null);
+  const lenisRef = useRef(null);
+
+  useEffect(() => {
+    lenisRef.current = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: "vertical",
+      gestureDirection: "vertical",
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenisRef.current.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenisRef.current.destroy();
+    };
+  }, []);
 
   useEffect(() => {
     const loadImages = async () => {
@@ -79,12 +105,15 @@ const Index = () => {
   useEffect(() => {
     if (preview.visible) {
       document.body.style.overflow = "hidden";
+      if (lenisRef.current) lenisRef.current.stop();
     } else {
       document.body.style.overflow = "auto";
+      if (lenisRef.current) lenisRef.current.start();
     }
 
     return () => {
       document.body.style.overflow = "auto";
+      if (lenisRef.current) lenisRef.current.start();
     };
   }, [preview.visible]);
 
@@ -136,47 +165,45 @@ const Index = () => {
   };
 
   return (
-    <ReactLenis root>
-      <div
-        ref={container}
-        className="index"
-        style={{ pointerEvents: preview.visible ? "none" : "auto" }}
-      >
-        <div className="grid-container" ref={gridRef}>
-          {images.length === 0 ? (
-            <div>No images found. Check your image directory.</div>
-          ) : (
-            images.map((image, index) => (
-              <div
-                className="grid-item-wrapper"
-                key={index}
-                onClick={() => handleItemClick(image.url, getItemName(index))}
-              >
-                <div className="grid-item-name">
-                  <p>{getItemName(index)}</p>
-                </div>
-                <div
-                  className="grid-item"
-                  style={{
-                    height: `${getRandomHeight()}px`,
-                    backgroundColor: getRandomColor(),
-                  }}
-                >
-                  <img
-                    src={image.url}
-                    alt={`Image ${index + 1}`}
-                    onError={(e) => {
-                      console.error(`Error loading image ${index}:`, e);
-                      e.target.src = "path/to/fallback/image.jpg";
-                    }}
-                  />
-                </div>
+    <div
+      ref={container}
+      className="index"
+      style={{ pointerEvents: preview.visible ? "none" : "auto" }}
+    >
+      <div className="grid-container" ref={gridRef}>
+        {images.length === 0 ? (
+          <div>No images found. Check your image directory.</div>
+        ) : (
+          images.map((image, index) => (
+            <div
+              className="grid-item-wrapper"
+              key={index}
+              onClick={() => handleItemClick(image.url, getItemName(index))}
+            >
+              <div className="grid-item-name">
+                <p>{getItemName(index)}</p>
               </div>
-            ))
-          )}
-        </div>
-        <div className="whitespace"></div>
+              <div
+                className="grid-item"
+                style={{
+                  height: `${getRandomHeight()}px`,
+                  backgroundColor: getRandomColor(),
+                }}
+              >
+                <img
+                  src={image.url}
+                  alt={`Image ${index + 1}`}
+                  onError={(e) => {
+                    console.error(`Error loading image ${index}:`, e);
+                    e.target.src = "path/to/fallback/image.jpg";
+                  }}
+                />
+              </div>
+            </div>
+          ))
+        )}
       </div>
+      <div className="whitespace"></div>
 
       {preview.visible && (
         <div
@@ -198,7 +225,7 @@ const Index = () => {
           </div>
         </div>
       )}
-    </ReactLenis>
+    </div>
   );
 };
 

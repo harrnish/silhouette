@@ -62,7 +62,6 @@
   position: absolute;
   bottom: 1em;
   left: 1em;
-  font-family: "Akkurat Mono";
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
