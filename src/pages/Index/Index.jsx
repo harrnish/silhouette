@@ -5,6 +5,7 @@ import { ReactLenis, useLenis } from "@studio-freight/react-lenis";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import Lenis from "lenis";
 
 const Index = () => {
   const container = useRef();
@@ -18,7 +19,23 @@ const Index = () => {
 
   const gridRef = useRef(null);
 
-  const lenis = useLenis(({ scroll }) => {});
+  useEffect(() => {
+    // Initialize Lenis
+    const lenis = new Lenis();
+
+    // Listen for the scroll event and log the event data
+    lenis.on("scroll", (e) => {
+      console.log(e);
+    });
+
+    // Use requestAnimationFrame to continuously update the scroll
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+  });
 
   useEffect(() => {
     const loadImages = async () => {
