@@ -24,21 +24,23 @@ const Index = () => {
           "../../assets/images/index/*.(png|jpg|svg)"
         );
 
-        const loadedImages = await Promise.all(
-          Object.values(imageContext).map((importImage) => importImage())
-        );
-        const imageUrls = loadedImages.map((module) => module.default);
-
-        // More robust sorting function
-        const sortedImages = imageUrls.sort((a, b) => {
-          const aMatch = a.match(/(\d+)/);
-          const bMatch = b.match(/(\d+)/);
+        const imageEntries = Object.entries(imageContext);
+        const sortedEntries = imageEntries.sort(([aPath], [bPath]) => {
+          const aMatch = aPath.match(/(\d+)/);
+          const bMatch = bPath.match(/(\d+)/);
           const aNum = aMatch ? parseInt(aMatch[0]) : 0;
           const bNum = bMatch ? parseInt(bMatch[0]) : 0;
           return aNum - bNum;
         });
 
-        setImages(sortedImages);
+        const loadedImages = await Promise.all(
+          sortedEntries.map(async ([path, importFunc]) => {
+            const module = await importFunc();
+            return { path, url: module.default };
+          })
+        );
+
+        setImages(loadedImages);
         setLoading(false);
       } catch (error) {
         console.error("Error loading images:", error);
@@ -148,7 +150,7 @@ const Index = () => {
               <div
                 className="grid-item-wrapper"
                 key={index}
-                onClick={() => handleItemClick(image, getItemName(index))}
+                onClick={() => handleItemClick(image.url, getItemName(index))}
               >
                 <div className="grid-item-name">
                   <p>{getItemName(index)}</p>
@@ -161,7 +163,7 @@ const Index = () => {
                   }}
                 >
                   <img
-                    src={image}
+                    src={image.url}
                     alt={`Image ${index + 1}`}
                     onError={(e) => {
                       console.error(`Error loading image ${index}:`, e);
