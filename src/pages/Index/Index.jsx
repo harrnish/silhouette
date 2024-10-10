@@ -29,9 +29,12 @@ const Index = () => {
         );
         const imageUrls = loadedImages.map((module) => module.default);
 
+        // More robust sorting function
         const sortedImages = imageUrls.sort((a, b) => {
-          const aNum = parseInt(a.match(/(\d+)\.[^.]+$/)[1]);
-          const bNum = parseInt(b.match(/(\d+)\.[^.]+$/)[1]);
+          const aMatch = a.match(/(\d+)/);
+          const bMatch = b.match(/(\d+)/);
+          const aNum = aMatch ? parseInt(aMatch[0]) : 0;
+          const bNum = bMatch ? parseInt(bMatch[0]) : 0;
           return aNum - bNum;
         });
 
@@ -50,21 +53,25 @@ const Index = () => {
       if (!loading && gridRef.current) {
         const items = gsap.utils.toArray(".grid-item-wrapper");
 
-        gsap.fromTo(
-          items,
-          { opacity: 0, y: 100 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.5,
-            ease: "power4.out",
-            stagger: 0.01,
-            delay: 0.75,
-          }
-        );
+        if (items.length > 0) {
+          gsap.fromTo(
+            items,
+            { opacity: 0, y: 100 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.5,
+              ease: "power4.out",
+              stagger: 0.01,
+              delay: 0.75,
+            }
+          );
+        } else {
+          console.warn("No grid items found for GSAP animation");
+        }
       }
     },
-    { scope: container, dependencies: [loading] }
+    { scope: container, dependencies: [loading, images] }
   );
 
   useEffect(() => {
@@ -135,7 +142,7 @@ const Index = () => {
       >
         <div className="grid-container" ref={gridRef}>
           {images.length === 0 ? (
-            <></>
+            <div>No images found. Check your image directory.</div>
           ) : (
             images.map((image, index) => (
               <div
