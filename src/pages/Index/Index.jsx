@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Index.css";
 import Transition from "../../components/Transition/Transition";
-import { ReactLenis, useLenis } from "lenis/react";
+import { ReactLenis } from "@studio-freight/react-lenis";
+
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -16,19 +17,6 @@ const Index = () => {
   });
 
   const gridRef = useRef(null);
-  const lenisRef = useRef();
-
-  useEffect(() => {
-    function update(time) {
-      lenisRef.current?.lenis?.raf(time * 1000);
-    }
-
-    gsap.ticker.add(update);
-
-    return () => {
-      gsap.ticker.remove(update);
-    };
-  });
 
   useEffect(() => {
     const loadImages = async () => {
